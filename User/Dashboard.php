@@ -138,22 +138,20 @@ if($stmt->rowCount() > 0) {
       </div>
     </nav>
   </header>
-
-  <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="header">
-    <h1>JEEPS TRIPS</h1>
+  <div class="container justify-content-center align-items-center" style="min-height: 200vh; min-width: 80vw;">
+  <div class="header">
   <div class="table-responsive">
   <div class="text-end my-3">
+  <center><br><br><h1>JEEPS TRIPS</h1></center>
     <form action="includes/generate_report.inc.php" method="post" target="_blank">
         <button type="submit" class="btn btn-success">Generate PDF Report</button>
     </form>
-</div>
+  </div>
       <table class="table table-bordered table-striped text-center">
         <thead class="table-dark">
           <tr>
             <th>Trip No.</th>
             <th>Jeep to Destination</th>
-            <th>Trip Status</th>
           </tr>
         </thead>
         <tbody>
@@ -172,38 +170,30 @@ if($stmt->rowCount() > 0) {
                 <tr>
                 <td><?= $trip['tripId'] ?></td>
                 <td>
-                  <div class="text-center">
-                    <table class="table table-centered">
-                    <?php  $total = 0;
-                    foreach($Tripplanned as $plan):
-                      
-                        $stmt = $conn->prepare("SELECT * FROM Route WHERE routeId = :routeId");
-                        $stmt->bindParam('routeId', $plan['routeId']);
-                        $stmt->execute();
-                        if($stmt->rowCount() > 0) {
-                            $route = $stmt->fetch(PDO::FETCH_ASSOC);
-                        }
-                        $total += number_format($route['fare'],2);
-                        ?>
-                        <tr>
-                            <td><?=$route['routeName']?></td>
-                        <td>₱<?=number_format($route['fare'],2)?></td>
-                        </tr>
-                       
-            
-                    <?php endforeach; ?>
-                    <tr>
-                        Total Fare: ₱<?=number_format($total,2)?>
-                    </tr>
+                    <table class="table table-bordered table-sm text-center mx-auto" style="width: auto;">
+                      <?php  
+                      $total = 0;
+                      foreach($Tripplanned as $plan):
+                          $stmt = $conn->prepare("SELECT * FROM Route WHERE routeId = :routeId");
+                          $stmt->bindParam('routeId', $plan['routeId']);
+                          $stmt->execute();
+                          if($stmt->rowCount() > 0) {
+                              $route = $stmt->fetch(PDO::FETCH_ASSOC);
+                          }
+                          $total += $route['fare'];
+                      ?>
+                      <tr>
+                          <td><?= $route['routeName'] ?></td>
+                          <td>₱<?= number_format($route['fare'], 2) ?></td>
+                      </tr>
+                      <?php endforeach; ?>
+                      <tr>
+                          <td colspan="2"><strong>Total Fare: ₱<?= number_format($total, 2) ?></strong></td>
+                      </tr>
                     </table>
-                    </center>
-                </td>
-                <td>
-                    <button>Done</button>
-                </td>
+                  </td>
                 </tr>
-          <?php 
-        
+          <?php        
             endforeach; 
         endif;
         ?>
