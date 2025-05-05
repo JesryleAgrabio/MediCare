@@ -1,13 +1,13 @@
 <?php
 session_start();
 require 'dbc.inc.php'; 
-$allTrips = $_SESSION['puvs']; // This contains all trip data (routeId, fare, etc)
+$allTrips = $_SESSION['puvs']; 
 $confirmedTrips = [];
 $userId = $_SESSION['userId'];
 $totalfare = 0;
 
 foreach ($allTrips as $trip) {
-    $totalfare += number_format($trip['fare'],2); // No need to format here — keep it numeric
+    $totalfare += number_format($trip['fare'],2); 
 }
 
 

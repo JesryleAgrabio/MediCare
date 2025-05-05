@@ -143,6 +143,11 @@ if($stmt->rowCount() > 0) {
     <div class="header">
     <h1>JEEPS TRIPS</h1>
   <div class="table-responsive">
+  <div class="text-end my-3">
+    <form action="includes/generate_report.inc.php" method="post" target="_blank">
+        <button type="submit" class="btn btn-success">Generate PDF Report</button>
+    </form>
+</div>
       <table class="table table-bordered table-striped text-center">
         <thead class="table-dark">
           <tr>

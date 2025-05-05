@@ -83,16 +83,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $response['success'] = true;
                 $response['message'] = 'Multi-leg route suggestion found!';
                 $_SESSION['puvs'] = $routesChain;
+                header("Location: ../trip-confirmation.php");
+                echo json_encode($response);
                
             } else {
                 $response['success'] = false;
                 $response['message'] = "No route found from $startLocation to $endLocation.";
+                header("Location: ../Trip.php");
+                echo json_encode($response);
                
             }
         } else {
             $response['success'] = true;
             $response['message'] = 'Direct route found!';
             $_SESSION['puvs'] = $puvs;
+            header("Location: ../trip-confirmation.php");
+            echo json_encode($response);
+            exit();
         }
 
         $conn->commit();
@@ -102,8 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response['success'] = false;
         $response['message'] = 'An error occurred : ' . $e->getMessage();
     }
-    header("Location: ../trip-confirmation.php");
-    echo json_encode($response);
-    exit();
+   
 }
 ?>
