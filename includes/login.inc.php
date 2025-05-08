@@ -18,7 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
             if (password_verify($password, $storedHashedPassword)) {
                
-                $_SESSION['username'] = $user['username'];
+                $_SESSION['firstname'] = $user['firstname'];
+                $_SESSION['lastname'] = $user['lastname'];
                 $_SESSION['userId'] = $user['id'];
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['account_type'] = $user['account_type'];
@@ -29,12 +30,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     header("Location: ../Admin/Dashboard.php");
                     exit();
                 }
-                if($_SESSION['account_type'] == "user"){ 
-                    header("Location: ../User/Dashboard.php");
+                if($_SESSION['account_type'] == "customer"){ 
+                    header("Location: ../Customer/Dashboard.php");
                     exit();
                 }
-                if($_SESSION['account_type'] == "jeep moderator"){ 
-                    header("Location: ../Jeep_Moderator/Dashboard.php");
+                if($_SESSION['account_type'] == "pharmacy"){ 
+                    header("Location: ../Pharmacy/Dashboard.php");
                     exit();
                 }
             } else {

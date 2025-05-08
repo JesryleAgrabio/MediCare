@@ -1,7 +1,8 @@
 <?php
 session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
+    $firstname = $_POST['firstname'];
+    $lastname = $_POST['lastname'];
     $email = $_POST['email'];
     $security_question = $_POST['security_question'];
     $security_answer = $_POST['security_answer'];
@@ -31,21 +32,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: ../Registration.php");
             exit();
         } 
-        // Password matching check
+     
         if ($password !== $confirm_password) {
             $_SESSION['error'] = "Password doesn't match!";
             header("Location: ../Registration.php");
             exit();
         }
 
-            // Hashing the password
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
             $hashedAnswer = password_hash($security_answer, PASSWORD_BCRYPT);
 
-            // Insert the user into the database
-            $sql = "INSERT INTO users (username, email, security_question, security_answer, password, account_type) VALUES (:username, :email ,:security_question, :security_answer, :password, :account_type)";
+            $sql = "INSERT INTO users (firstname, lastname, email, security_question, security_answer, password, account_type) VALUES (:firstname, :lastname, :email ,:security_question, :security_answer, :password, :account_type)";
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':firstname', $firstname);
+            $stmt->bindParam(':lastname', $lastname);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':security_question', $security_question);
             $stmt->bindParam(':security_answer', $hashedAnswer);

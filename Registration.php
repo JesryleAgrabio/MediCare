@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEEPS - Registration</title>
+    <title>MediCare - Registration</title>
    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -34,8 +34,8 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white container-fluid py-3">
       
       <a class="navbar-brand d-flex align-items-center" href="#">
-        <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Logo" width="30" height="30">
-        <span class="nav-item">JEEPS</span>
+        <img src="Resources/medicare.png" alt="Logo" width="30" height="30">
+        <span class="nav-item">MediCare</span>
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -88,8 +88,13 @@
            
             <form method="POST" action="includes/add-Registration.inc.php">
                 <div class="mb-3">
-                    <label for="username" class="form-label">Username:</label>
-                    <input type="text" name="username" class="form-control" required>
+                    <label for="firstname" class="form-label">First name:</label>
+                    <input type="text" name="firstname" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Last name" class="form-label">Last name:</label>
+                    <input type="text" name="lastname" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
@@ -118,9 +123,9 @@
                 <div class="mb-3">
                     <label for="account_type" class="form-label">Account Type:</label>
                     <select name="account_type" class="form-select">
-                        <option value="user">User</option>
+                        <option value="customer">Customer</option>
                         <option value="admin">Admin</option>
-                        <option value="jeep moderator">Jeep Moderator</option>
+                        <option value="pharmacy">Pharmacy</option>
                     </select>
                 </div>
 

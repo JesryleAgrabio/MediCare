@@ -1,10 +1,30 @@
 <?php
 session_start();
-
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
+require_once "includes/dbc.inc.php";
+if (!isset($_SESSION['userId'])) {
+    header("Location: ../index.php");
     exit();
 }
+
+$query = $conn->query("
+    SELECT 
+        o.orderId,
+        p.productName,
+        u1.firstname AS pharmacyFirstName,
+        u1.lastname AS pharmacyLastName,
+        u2.firstname AS customerFirstName,
+        u2.lastname AS customerLastName,
+        o.isInTransaction,
+        o.order_timestamp
+    FROM orders o
+    LEFT JOIN products p ON o.productId = p.productId
+    LEFT JOIN users u1 ON o.pharmacyId = u1.id
+    LEFT JOIN users u2 ON o.customerId = u2.id
+    WHERE o.isInTransaction = 1
+    ORDER BY o.order_timestamp DESC
+");
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -78,13 +98,13 @@ if (!isset($_SESSION['username'])) {
 </head>
 <body>
 <div class="bg-white">
-  <header class="fixed-top bg-white shadow-sm">
+ <header class="fixed-top bg-white shadow-sm">
     <nav class="navbar navbar-expand-lg navbar-light bg-white container-fluid py-3">
       <a class="navbar-brand d-flex align-items-center" href="#">
         <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Logo" width="30" height="30">
-        <span class="ms-2">JEEPS</span>
+        <span class="ms-2">Medicare</span>
       </a>
-      <span class="navbar-text ms-3">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?> (Moderator)</span>
+      <span class="navbar-text ms-3">Welcome, <?php echo htmlspecialchars($_SESSION['firstname']); ?> (Pharmacy)</span>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -95,13 +115,13 @@ if (!isset($_SESSION['username'])) {
             <a class="nav-link active" href="Dashboard.php">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="routes.php">Route List</a>
+            <a class="nav-link" href="Products.php">Products</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="jeeps.php">Jeep List</a>
+            <a class="nav-link" href="Orders.php">Orders</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="busStops.php">Bus Stops</a>
+           <li class="nav-item">
+            <a class="nav-link" href="Transaction-History.php">Transaction History</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="includes/logout.inc.php">Log Out</a>
@@ -110,48 +130,40 @@ if (!isset($_SESSION['username'])) {
       </div>
     </nav>
   </header>
-
   <div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
     <div class="text-center">
-      <h1 class="mb-4">Moderator Dashboard</h1>
-      <div class="user-info">
-        <p>Use the navigation bar above to manage:</p>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item"><a href="Route.php">Manage Jeep Routes</a></li>
-          <li class="list-group-item"><a href="PUV.php">Manage Public Utility Vehicles</a></li>
-          <li class="list-group-item"><a href="busStops.php">Manage Bus Stops </a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
+      <h1 class="mb-4">Pharmacy Dashboard</h1>
+    <h2 class="mb-4">Order Manager</h2>
 
-  <footer class="sticky-footer minimized">
-    <button class="footer-toggle-btn" id="footerToggleBtn">▲</button>
-    <div class="footer-content">
-        <nav class="navbar navbar-expand-lg navbar-light bg-white container-fluid py-3">
-            <div class="d-flex justify-content-around w-100">
-                <button class="btn btn-outline-primary" onmouseover="changeText('Search Routes')" onmouseout="resetText()">
-                    <img src="https://via.placeholder.com/30" alt="Search Routes">
-                </button>
-                <button class="btn btn-outline-success" onmouseover="changeText('Fare Chart')" onmouseout="resetText()">
-                    <img src="https://via.placeholder.com/30" alt="Fare Chart">
-                </button>
-                <button class="btn btn-outline-warning" onmouseover="changeText('Schedule Chart')" onmouseout="resetText()">
-                    <img src="https://via.placeholder.com/30" alt="Schedule Chart">
-                </button>
-                <button class="btn btn-outline-danger" onmouseover="changeText('Search History')" onmouseout="resetText()">
-                    <img src="https://via.placeholder.com/30" alt="Search History">
-                </button>
-                <button class="btn btn-outline-danger" onmouseover="changeText('Report PUV')" onmouseout="resetText()">
-                    <img src="https://via.placeholder.com/30" alt="Report PUV">
-                </button>
-            </div>
-        </nav>
-        <div class="d-flex justify-content-center my-3">
-            <div class="text-container col-md-6 text-center py-3">
-                <span class="text-box" id="dynamicText">PLACEHOLDER</span>
-            </div>
-        </div>
+    <table class='table table-bordered'>
+        <thead class="table-light">
+            <tr>
+                <th>Order ID</th>
+                <th>Product</th>
+                <th>Customer</th>
+                <th>Ordered At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach($res as $order): ?>
+            <tr>
+                <td><?php echo $order['orderId']; ?></td>
+                <td><?php echo htmlspecialchars($order['productName']); ?></td>
+                <td><?php echo htmlspecialchars($order['customerFirstName'] . ' ' . $order['customerLastName']); ?></td>
+                <td><?php echo $order['order_timestamp']; ?></td>
+                <td>
+                    <form action="includes/handle_order_action.php" method="POST" onsubmit="return confirm('Are you sure you want to take this action?');">
+                        <input type="hidden" name="orderId" value="<?php echo $order['orderId']; ?>">
+                        <button type="submit" name="action" value="confirm" class="btn btn-success btn-sm">Confirm</button>
+                        <button type="submit" name="action" value="delete" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+  </div>
     </div>
   </footer>
 

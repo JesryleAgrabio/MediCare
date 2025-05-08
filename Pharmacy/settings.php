@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['userId'])) {
+    header("Location: ../index.php");
+    exit();
+}
+
+?>
+
 <div class="user-info">
             <h3>Your Information</h3>
             <p><strong>Username:</strong> <?php echo htmlspecialchars($_SESSION['username']); ?></p>

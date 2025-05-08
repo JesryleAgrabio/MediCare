@@ -1,7 +1,7 @@
 <?php
 
 $host = "localhost";
-$dbname = "jeeps";
+$dbname = "medicare";
 $dbusername = "root";
 $dbpassword = "";
 

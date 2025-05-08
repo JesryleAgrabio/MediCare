@@ -1,6 +1,10 @@
 <?php
 require_once 'includes/dbc.inc.php';
-
+session_start();
+if (!isset($_SESSION['userId'])) {
+    header("Location: ../index.php");
+    exit();
+}
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
@@ -52,31 +56,21 @@ if (isset($_GET['id'])) {
 </head>
 <body>
 <div class="bg-white">
-  <header class="fixed-top bg-white shadow-sm">
+ <header class="fixed-top bg-white shadow-sm">
     <nav class="navbar navbar-expand-lg navbar-light bg-white container-fluid py-3">
-     
       <a class="navbar-brand d-flex align-items-center" href="#">
         <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Logo" width="30" height="30">
-        <span class="nav-item">JEEPS</span>
+        <span class="ms-2">Medicare</span>
       </a>
+      <span class="navbar-text ms-3">Welcome, <?php echo htmlspecialchars($_SESSION['firstname']); ?> (Administrator)</span>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      
-      
+
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link active" href="Dashboard.php">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">About Us</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Service</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
+            <a class="nav-link" href="Dashboard.php">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="includes/logout.inc.php">Log Out</a>
@@ -92,9 +86,14 @@ if (isset($_GET['id'])) {
         <h2>Edit User</h2>
 
         <form method="POST" action="includes/edit-user.inc.php">
+           <input type="text" name="id" class="form-control" value="<?php echo $user['id']; ?>" hidden required>
             <div class="mb-3">
-                <label for="username">Username:</label>
-                <input type="text" name="username" class="form-control" value="<?php echo $user['username']; ?>" required>
+                <label for="firstname">First name:</label>
+                <input type="text" name="firstname" class="form-control" value="<?php echo $user['firstname']; ?>" required>
+            </div>
+             <div class="mb-3">
+                <label for="lastname">Last name:</label>
+                <input type="text" name="lastname" class="form-control" value="<?php echo $user['lastname']; ?>" required>
             </div>
 
             <div class="mb-3">
