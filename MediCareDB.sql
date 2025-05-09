@@ -50,11 +50,18 @@ CREATE TABLE orders (
 -- TRANSACTION HISTORY TABLE
 CREATE TABLE transactionHistory (
     transactionId INT AUTO_INCREMENT PRIMARY KEY,
-    orderId INT,
-    transactionStatus VARCHAR(50) NOT NULL,
-    transaction_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (orderId) REFERENCES orders(orderId) ON DELETE SET NULL
+    orderId INT NOT NULL,
+    productId INT NOT NULL,
+    customerId INT NOT NULL,
+    pharmacyId INT NOT NULL,
+    status ENUM('pending', 'success', 'rejected') NOT NULL,
+    action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (orderId) REFERENCES orders(orderId),
+    FOREIGN KEY (productId) REFERENCES products(productId),
+    FOREIGN KEY (customerId) REFERENCES users(id),
+    FOREIGN KEY (pharmacyId) REFERENCES users(id)
 );
+
 
 -- CART TABLE
 CREATE TABLE cart (
