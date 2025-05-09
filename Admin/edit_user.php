@@ -104,9 +104,9 @@ if (isset($_GET['id'])) {
             <div class="mb-3">
                     <label for="account_type" class="form-label">Account Type:</label>
                     <select name="account_type" class="form-select">
-                        <option value="user">User</option>
+                        <option value="customer">Customer</option>
                         <option value="admin">Admin</option>
-                        <option value="moderator">Moderator</option>
+                        <option value="pharmacy">Pharmacy</option>
                     </select>
                 </div>
 
